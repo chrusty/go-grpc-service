@@ -16,6 +16,7 @@ Not covered
 -----------
 
 * GRPC Middleware
+* Pre-made GRPC client
 * K8S probes
 * Config
 * Actual implementations of interfaces
