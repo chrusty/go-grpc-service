@@ -1,0 +1,43 @@
+syntax = "proto3";
+package svc.example;
+
+service Example {
+    rpc CreateCruft(CreateCruftRequest) returns (CreateCruftResponse);
+    rpc ReadCruft(ReadCruftRequest) returns (ReadCruftResponse);
+}
+
+message CreateCruftRequest {
+    Cruft cruft = 1;
+}
+
+message CreateCruftResponse {
+    StatusCode status_code = 1;
+    string cruft_id = 2;
+}
+
+message ReadCruftRequest {
+    string cruft_id = 1;
+}
+
+message ReadCruftResponse {
+    StatusCode status_code = 1;
+    Cruft cruft = 2;
+}
+
+// I use these to respond with application-specific error scenarios (instead of returning a GRPC error).
+// This allows our middleware to trust that a GRPC error is either a dead server or a protocol failure (and is therefore safe to retry).
+// I'm still not sure that this is the right way, but I don't like using GRPC codes either.
+enum StatusCode {
+    UNSPECIFIED = 0;
+    OK = 1000;
+    BAD_REQUEST_PAYLOAD = 1001;
+    CRUFT_ALREADY_EXISTS = 1002;
+    CRUFT_NOT_FOUND = 1003;
+}
+
+// Usually I would have "models" like this in a separate repo
+message Cruft {
+    int32 id = 1;
+    string name = 2;
+    bool is_crufty = 3;
+}
